@@ -1,0 +1,55 @@
+﻿@page "/"
+
+
+@using Microsoft.AspNetCore.Components;
+@using Microsoft.JSInterop;
+@inject IJSRuntime JSRuntime
+
+<h1>JavaScript Interop</h1>
+
+<h2>Invoke JavaScript functions from .NET methods</h2>
+
+<button type="button" class="btn btn-primary" @onclick="TriggerJsPrompt">
+    Trigger JavaScript Prompt
+</button>
+
+<div @ref="divElement">Text during render</div>
+
+
+<h3 id="welcome" style="color:green;font-style:italic"></h3>
+
+@code {
+
+    private ElementReference divElement;
+    private string infoFromJs;
+
+
+    public async Task TriggerJsPrompt()
+    {
+        var name = await JSRuntime.InvokeAsync<string>
+    (
+    "exampleJsFunctions.showPrompt",
+    "What's your name?");
+
+        await JSRuntime.InvokeVoidAsync(
+        "exampleJsFunctions.displayWelcome",
+        $"Hello {name}! Welcome to Blazor!");
+    }
+    
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && infoFromJs == null)
+        {
+            infoFromJs = await JSRuntime.InvokeAsync<string>(
+                "setElementText", divElement, "Hello from interop call!");
+
+            StateHasChanged();
+        }
+    }
+     [JSInvokable("DifferentMethodName")]
+    public static Task<int[]> ReturnArrayAsync()
+    {
+        return Task.FromResult(new int[] { 1, 2, 3 });
+    }
+
+}

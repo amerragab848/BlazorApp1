@@ -1,0 +1,57 @@
+﻿<h3>EmployeeDetails</h3>
+
+
+Blazor route parameters
+
+In this video we will discuss route parameters in blazor with an example. The following EmmployeeList component displays the list of all employees.
+
+blazor route parameters
+
+
+
+When we click the View button, the user should be redirected to the URL (/employeedetails/3). The value 3 in the URI is the employee id. The blazor component (EmployeeDetails) displays the details of the Employee.
+
+blazor route parameter example
+
+EmployeeDetails.razor
+@page "/employeedetails/{id}"
+@inherits EmployeeDetailsBase
+@inject ToastService toastService
+
+@if (Employee == null || Employee.Department == null)
+{
+    <div class="spinner"></div>
+}
+else
+{
+
+    <div class="row justify-content-center m-3">
+        <div class="col-sm-8">
+            <div class="card">
+                <div class="card-header">
+                    <h1>@Employee.FirstName @Employee.LastName</h1>
+                </div>
+
+                <div class="card-body text-center">
+                    <img class="card-img-top" src="@Employee.PhotoPath" @onmousemove="@(e => Coordinates = $"X = {e.ClientX} Y = {e.ClientY}")" />
+
+                    <h4>Employee ID : @Employee.EmployeeId</h4>
+                    <h4>Email : @Employee.Email</h4>
+                    <h4>Department : @Employee.Department.DepartmentName.</h4>
+                </div>
+                <button class="btn btn-primary" @onclick="@Button_Click">@ButtonText</button>
+                <div class="card-footer  text-center @CssClass">
+                    <a href="/" class="btn btn-primary">Back</a>
+                    <a href="#" class="btn btn-primary">Edit</a>
+                    <a href="#" class="btn btn-danger">Delete</a>
+                </div>
+            </div>
+        </div>
+        <div>
+            <textarea @bind="Description" @bind:event="oninput" />
+        </div>
+        <div>
+            Count : @Description.Length
+        </div>
+    </div>
+}

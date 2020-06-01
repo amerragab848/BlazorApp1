@@ -1,0 +1,27 @@
+﻿@page "/employee"
+@inherits EmployeeListBase
+@inject ToastService toastService
+
+<h3>Employee List</h3>
+SelectedEmployeesCount:
+<input type="text" @bind="SelectedEmployeesCount" readonly />
+
+<input type="checkbox" id="showFooter" @bind="ShowFooter" />
+<label for="showFooter">Show Footer</label>
+
+@if (Employees == null)
+{
+    <div class="spinner"></div>
+}
+else
+{
+    <div class="card-deck">
+        @foreach (var employee in Employees)
+        {
+            <DisplayEmployee Employee="employee"
+                             ShowFooter="ShowFooter"
+                             OnEmployeeSelection="EmployeeSelectionChanged"
+                             OnEmployeeDeleted="EmployeeDeleted"></DisplayEmployee>
+        }
+    </div>
+}
